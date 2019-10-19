@@ -25,6 +25,4 @@ for (const src of server.sources) {
     src.sync.on('event', (evt) => {
         console.log(`server received ${evt.url} from ${src.name}`)
     })
-    // not sure where I want to do the duplication avoidance
-    // might write a wrapper around the poll interval to check the results vs the cache
 }
