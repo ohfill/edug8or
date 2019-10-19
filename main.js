@@ -23,6 +23,6 @@ console.log(server)
 for (const src of server.sources) {
     src.poll()      // this will trigger looping/setInterval as needed in the src class
     src.sync.on('event', (evt) => {
-        console.log(`server received ${evt.url} from ${src.name}`)
+        console.log(`${src.name} | ${evt.title} | ${evt.url}`)
     })
 }

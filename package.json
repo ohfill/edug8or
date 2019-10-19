@@ -9,6 +9,7 @@
   "author": "ohfill",
   "license": "UNLICENSED",
   "dependencies": {
-    "got": "^9.6.0"
+    "got": "^9.6.0",
+    "rss-parser": "^3.7.3"
   }
 }

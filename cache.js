@@ -8,11 +8,16 @@ class Cache {
 
     // first attempt at making a cache that we can use quickly
     async add(v) {
-        v.url = await this._checkUrlRedirects(v)
-        if (!this._cache.has(v.url)) {
-            this._cache.add(v.url)
-            return true
-        } else {
+        try {
+            v.url = await this._checkUrlRedirects(v)
+            if (!this._cache.has(v.url)) {
+                this._cache.add(v.url)
+                return true
+            } else {
+                return false
+            }
+        } catch {
+            // if there is an issue testing the link, fail
             return false
         }
     }
