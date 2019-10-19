@@ -10,7 +10,7 @@ const myEmitter = new emitter()
 async function getReddit() {
     console.log('polling reddit...')
     try {
-        let feed = await parser.parseURL("http://www.reddit.com/r/news+globalnews+politics.rss")
+        let feed = await parser.parseURL("http://www.reddit.com/r/news+globalnews+politics/new.rss")
         for (let entry of feed.items) {
             let body = html(entry.content)
             let url = body.querySelector('span a').attributes.href       // this is real shakey and will probably break one day
