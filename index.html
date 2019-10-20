@@ -17,7 +17,7 @@
             window.onload = function() {
                 const feed = document.getElementById('feed')
                 const status = document.getElementById('status')
-                const socket = new WebSocket(`ws://${document.location.host}/events`)
+                const socket = new WebSocket(`wss://${document.location.host}/events`)
 
                 socket.onopen = (e) => {
                     status.classList.remove('red')
