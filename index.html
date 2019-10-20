@@ -26,6 +26,13 @@
                     while (feed.firstChild) {
                         feed.removeChild(feed.firstChild)
                     }
+                    let ka = setInterval(() => {
+                        if (socket.readyState === WebSocket.OPEN) {
+                            socket.send('keep alive')
+                        } else if (socket.readyState === WebSocket.CLOSED) {
+                            clearInterval(ka)
+                        }
+                    }, 1000*45);    // heroku needs a keep alive at least once in 55 seconds, we do 45 just to be safe
                     console.log('ws connected, it should only log errors')
                 }
                 socket.onclose = (e) => {
