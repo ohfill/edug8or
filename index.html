@@ -12,12 +12,29 @@
             span#status {
                 width: 10em;
             }
+            .box {
+                width: 80%;
+                height: 75%;
+                display: block;
+                position: absolute;
+                z-index: 100;
+                background: white;
+            }
+            .box iframe {
+                width: 100%;
+                height: 100%;
+            }
+            .nobox {
+                display: none;
+            }
         </style>
         <script>
             window.onload = function() {
                 const feed = document.getElementById('feed')
                 const status = document.getElementById('status')
-                const socket = new WebSocket(`wss://${document.location.host}/events`)
+                const previewContainer = document.getElementById('previewContainer')
+                const preview = document.getElementById('preview')
+                const socket = new WebSocket(`ws://${document.location.host}/events`)
 
                 socket.onopen = (e) => {
                     status.classList.remove('red')
@@ -48,13 +65,19 @@
                     addEvent(source, event)
                 }
 
+                previewContainer.onmouseout = unsetPreview
+
                 function addEvent(source, event) {
                     let div = document.createElement('div')
                     div.classList.add('event')
                     // eventually do the source -> color lookup
                     let s = document.createElement('span')
-                    s.innerText = source + " - "
+                    s.innerText = source 
+                    let g = document.createElement('span')
+                    g.innerText = " 👓 "
+                    g.onmouseover = setPreview
                     div.appendChild(s)
+                    div.appendChild(g)
                     let a = document.createElement('a')
                     a.innerText = event.title
                     a.href = event.url
@@ -62,12 +85,31 @@
                     div.appendChild(a)
                     feed.insertBefore(div, feed.firstChild)
                 }
+
+                function setPreview(e) {
+                    let g = e.srcElement
+                    let url = g.nextSibling.href
+                    preview.src = url
+                    previewContainer.classList.add('box')
+                    previewContainer.classList.remove('nobox')
+                    previewContainer.style.top = `${g.offsetTop+g.offsetHeight}px` // add ~0.5em so we can still click the link
+                    previewContainer.style.left = `${g.offsetLeft+g.offsetWidth}px`
+                }
+
+                function unsetPreview(e) {
+                    preview.src = ''
+                    previewContainer.classList.add('nobox')
+                    previewContainer.classList.remove('box')
+                }
             }
         </script>
     </head>
     <body>
         <h1>EDUG8OR</h1>
         <div>Connected? <span id="status" class="red">⬤</span></div>
+        <div id="previewContainer" class="nobox">
+            <iframe id="preview" onerror="unsetPreview"></iframe>
+        </div>
         <div id="feed"></div>
     </body>
 </html>
