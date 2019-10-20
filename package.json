@@ -9,6 +9,8 @@
   "author": "ohfill",
   "license": "UNLICENSED",
   "dependencies": {
+    "express": "^4.17.1",
+    "express-ws": "^4.0.0",
     "got": "^9.6.0",
     "node-html-parser": "^1.1.16",
     "redis": "^2.8.0",

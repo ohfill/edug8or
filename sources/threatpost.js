@@ -7,7 +7,6 @@ const parser = new Parser()
 const myEmitter = new emitter()
 
 async function getThreatPost() {
-    console.log('polling TP...')
     try {
         let feed = await parser.parseURL("https://threatpost.com/feed/")
         for (let entry of feed.items) {

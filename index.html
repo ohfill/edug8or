@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>EDUG8OR</title>
+        <style>
+            .green {
+                color: green;
+            }
+            .red {
+                color: red;
+            }
+            span#status {
+                width: 10em;
+            }
+        </style>
+        <script>
+            window.onload = function() {
+                const feed = document.getElementById('feed')
+                const status = document.getElementById('status')
+                const socket = new WebSocket(`ws://${document.location.host}/events`)
+
+                socket.onopen = (e) => {
+                    status.classList.remove('red')
+                    status.classList.add('green')
+                    // clear the feed on refresh because we will send whole cache
+                    while (feed.firstChild) {
+                        feed.removeChild(feed.firstChild)
+                    }
+                    console.log('ws connected, it should only log errors')
+                }
+                socket.onclose = (e) => {
+                    status.classList.remove('green')
+                    status.classList.add('red')
+                    console.log('ws closed')
+                }
+                socket.onerror = (e) => {
+                    console.error("websocket error", e)
+                }
+                socket.onmessage = (e) => {
+                    let {source, event} = JSON.parse(e.data)
+                    addEvent(source, event)
+                }
+
+                function addEvent(source, event) {
+                    let div = document.createElement('div')
+                    div.classList.add('event')
+                    // eventually do the source -> color lookup
+                    let s = document.createElement('span')
+                    s.innerText = source + " - "
+                    div.appendChild(s)
+                    let a = document.createElement('a')
+                    a.innerText = event.title
+                    a.href = event.url
+                    a.target = "_blank"     // auto-open in new tab
+                    div.appendChild(a)
+                    feed.insertBefore(div, feed.firstChild)
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <h1>EDUG8OR</h1>
+        <div>Connected? <span id="status" class="red">⬤</span></div>
+        <div id="feed"></div>
+    </body>
+</html>

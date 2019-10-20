@@ -8,7 +8,6 @@ const parser = new Parser()
 const myEmitter = new emitter()
 
 async function getReddit() {
-    console.log('polling reddit...')
     try {
         let feed = await parser.parseURL("http://www.reddit.com/r/news+globalnews+politics/new.rss")
         for (let entry of feed.items) {

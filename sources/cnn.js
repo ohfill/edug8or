@@ -7,7 +7,6 @@ const parser = new Parser()
 const myEmitter = new emitter()
 
 async function getCNN() {
-    console.log('polling cnn...')
     try {
         let feed = await parser.parseURL("http://rss.cnn.com/rss/cnn_latest.rss")
         for (let entry of feed.items) {

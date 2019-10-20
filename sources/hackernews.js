@@ -7,7 +7,6 @@ const emitter = require('events').EventEmitter
 const myEmitter = new emitter()		// there has to be a better way but oh well
 
 async function getTopHN() {
-	console.log('polling hn...')
 	try {
 		const resp = await got('https://hacker-news.firebaseio.com/v0/newstories.json')
 		let ids = JSON.parse(resp.body)
