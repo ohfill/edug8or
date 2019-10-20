@@ -14,8 +14,19 @@ function loadSources() {
     }
 }
 
+function loadCache() {
+    let cache = require('./cache')
+    cache.history.on('history', (evts) => {
+        for (let evt of evts) {
+            console.log(`CACHE | ${evt.title} | ${evt.url}`)
+        }
+    })
+    cache.dumpCache()
+}
+
 /* start the app */
 loadSources()
+loadCache()
 
 console.log(server)
 
