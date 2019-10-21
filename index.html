@@ -45,7 +45,7 @@
                     }
                     let ka = setInterval(() => {
                         if (socket.readyState === WebSocket.OPEN) {
-                            socket.send('keep alive')
+                            socket.send('ping')
                         } else if (socket.readyState === WebSocket.CLOSED) {
                             clearInterval(ka)
                         }
@@ -61,11 +61,16 @@
                     console.error("websocket error", e)
                 }
                 socket.onmessage = (e) => {
-                    let {source, event} = JSON.parse(e.data)
-                    addEvent(source, event)
+                    let recv = JSON.parse(e.data)
+                    // ignore the keep alives
+                    if (recv !== "pong") {
+                        let {source, event} = recv
+                        addEvent(source, event)
+                    }
                 }
 
                 previewContainer.onmouseout = unsetPreview
+                document.body.onclick = unsetPreview
 
                 function addEvent(source, event) {
                     let div = document.createElement('div')

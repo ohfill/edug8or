@@ -15,7 +15,10 @@ app.ws('/events', (ws, req) => {
     // this is pretty bad, see comments at function declarations
     sender = sendEvent(ws)
     loadCache()
-    // onmessage is a noop, all the client sends are keep-alives
+    // all the client sends are keep-alives
+    ws.on('message', (msg) => {
+        ws.send('pong')
+    })
 })
 
 function broadcastEvent(src, event) {
