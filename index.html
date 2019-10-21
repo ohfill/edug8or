@@ -61,10 +61,10 @@
                     console.error("websocket error", e)
                 }
                 socket.onmessage = (e) => {
-                    let recv = JSON.parse(e.data)
+                    let recv = e.data
                     // ignore the keep alives
                     if (recv !== "pong") {
-                        let {source, event} = recv
+                        let {source, event} = JSON.parse(recv)
                         addEvent(source, event)
                     }
                 }
