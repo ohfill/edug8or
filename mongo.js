@@ -1,7 +1,10 @@
 const mongoose = require('mongoose')
 const got = require('got')
-mongoose.connect('mongodb://localhost/edug8or', 
-    {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true}
+mongoose.connect(process.env.MONGODB_URI,
+    {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true},
+    (e) => {
+        e ? console.log("error connecting to mongo") : console.log('connected to mongo')
+    }
 )
 const db = mongoose.connection
 db.on('error', console.error.bind(console, 'connection error:'))
@@ -22,6 +25,16 @@ const EventSchema = new mongoose.Schema({
         type: Date,
         index: true,
         default: () => { new Date(new Date().getTime() + 1000*60*24) }  // expire in 24 hours
+    }
+})
+
+EventSchema.pre('save', async function(next) {
+    // check for same host and same title to avoid many bloombergs
+    let dups = await this.constructor.findOne({
+        title: this.title      // look for exact same title
+    }).exec()
+    if (dups) {
+        throw new Error('found dup for title', this.title)
     }
 })
 

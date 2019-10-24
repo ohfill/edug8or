@@ -21,7 +21,6 @@ async function getCNN() {
 
 async function _processItem(item) {
     if (await Cache.add(item)) {
-        console.log('cnn cache miss', {event: item})
         myEmitter.emit('event', item)
     }
 }
