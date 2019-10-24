@@ -1,5 +1,5 @@
 /* cnn.js */
-const Event = require('../Event')
+const Event = require('../mongo')
 const Cache = require('../cache')
 const emitter = require('events').EventEmitter
 const Parser = require('rss-parser')
@@ -11,7 +11,7 @@ async function getCNN() {
         let feed = await parser.parseURL("http://rss.cnn.com/rss/cnn_latest.rss")
         for (let entry of feed.items) {
             let {title, contentSnippet, guid, isoDate} = entry
-            let evt = new Event(guid, title, {time: isoDate, summary: contentSnippet})
+            let evt = new Event({url: guid, title: title, source: 'CNN'})
             _processItem(evt)
         }
     } catch {
@@ -21,6 +21,7 @@ async function getCNN() {
 
 async function _processItem(item) {
     if (await Cache.add(item)) {
+        console.log('cnn cache miss', {event: item})
         myEmitter.emit('event', item)
     }
 }

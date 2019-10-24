@@ -1,5 +1,5 @@
 /* threatpost.js */
-const Event = require('../Event')
+const Event = require('../mongo')
 const Cache = require('../cache')
 const emitter = require('events').EventEmitter
 const Parser = require('rss-parser')
@@ -11,7 +11,7 @@ async function getThreatPost() {
         let feed = await parser.parseURL("https://threatpost.com/feed/")
         for (let entry of feed.items) {
             let {title, contentSnippet, link, pubDate, categories} = entry
-            let evt = new Event(link, title, {time: pubDate, summary: contentSnippet, tags: categories})
+            let evt = new Event({url: link, title: title, source: "Threat Post",tags: categories})
             _processItem(evt)
         }
     } catch {

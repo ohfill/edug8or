@@ -1,5 +1,5 @@
 const got = require("got")
-const Event = require('../Event')
+const Event = require('../mongo')
 const Cache = require('../cache')
 
 const emitter = require('events').EventEmitter
@@ -10,7 +10,6 @@ async function getTopHN() {
 	try {
 		const resp = await got('https://hacker-news.firebaseio.com/v0/newstories.json')
 		let ids = JSON.parse(resp.body)
-		let rqs = []
 		for (let id of ids.slice(0, 50)) {		// really need to trial and error this one (also vs top/hot)
 			// it might make sense to just leave the top X and then cache will handle actual new things after 
 			// a small mess at start-up
@@ -26,8 +25,8 @@ async function getTopHN() {
 async function _processItem(item) {
 	let res = await item
 	try {
-		let {url, title, time} = JSON.parse(res.body)
-		let evt = new Event(url, title, {sourc: "hn", time: time})
+		let {url, title} = JSON.parse(res.body)
+		let evt = new Event({url: url, title: title, source: "Hacker News"})
 		if (await Cache.add(evt)) {
 			myEmitter.emit('event', evt)
 		}

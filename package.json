@@ -13,6 +13,7 @@
     "express": "^4.17.1",
     "express-ws": "^4.0.0",
     "got": "^9.6.0",
+    "mongoose": "^5.7.6",
     "node-html-parser": "^1.1.16",
     "redis": "^2.8.0",
     "rss-parser": "^3.7.3"

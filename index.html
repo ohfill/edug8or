@@ -34,7 +34,7 @@
                 const status = document.getElementById('status')
                 const previewContainer = document.getElementById('previewContainer')
                 const preview = document.getElementById('preview')
-                const socket = new WebSocket(`wss://${document.location.host}/events`)
+                const socket = new WebSocket(`ws://${document.location.host}/events`)
 
                 socket.onopen = (e) => {
                     status.classList.remove('red')
@@ -64,20 +64,23 @@
                     let recv = e.data
                     // ignore the keep alives
                     if (recv !== "pong") {
-                        let {source, event} = JSON.parse(recv)
-                        addEvent(source, event)
+                        let event = JSON.parse(recv)
+                        addEvent(event)
                     }
                 }
 
                 previewContainer.onmouseout = unsetPreview
                 document.body.onclick = unsetPreview
 
-                function addEvent(source, event) {
+                function addEvent(event) {
                     let div = document.createElement('div')
                     div.classList.add('event')
+                    let t = document.createElement('span')
+                    t.innerText = new Date(event.foundAt).toLocaleString() + ' '
+                    div.appendChild(t)
                     // eventually do the source -> color lookup
                     let s = document.createElement('span')
-                    s.innerText = source 
+                    s.innerText = event.source
                     let g = document.createElement('span')
                     g.innerText = " 👓 "
                     g.onmouseover = setPreview

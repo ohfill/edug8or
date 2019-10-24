@@ -1,5 +1,5 @@
 /* reddit.js */
-const Event = require('../Event')
+const Event = require('../mongo')
 const Cache = require('../cache')
 const emitter = require('events').EventEmitter
 const Parser = require('rss-parser')
@@ -14,7 +14,7 @@ async function getReddit() {
             let body = html(entry.content)
             let url = body.querySelector('span a').attributes.href       // this is real shakey and will probably break one day
             let {title} = entry
-            let evt = new Event(url, title, {})
+            let evt = new Event({url: url, title: title, source: "Reddit"})
             _processItem(evt)
         }
     } catch {

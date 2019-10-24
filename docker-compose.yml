@@ -1,4 +1,4 @@
-redis:
-    image: 'redis'
+mongo:
+    image: 'mongo'
     ports:
-      - '6379:6379'
+      - '27017:27017'
