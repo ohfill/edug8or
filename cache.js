@@ -23,7 +23,7 @@ class Cache {
             return check.request.gotOptions.href
         } catch {
             // if for some reason we can't check for the redirects
-            return ''
+            return v
         }
     }
 

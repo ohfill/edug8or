@@ -35,6 +35,7 @@
                 const previewContainer = document.getElementById('previewContainer')
                 const preview = document.getElementById('preview')
                 const socket = new WebSocket(`wss://${document.location.host}/events`)
+                var lastDate = new Date()
 
                 socket.onopen = (e) => {
                     status.classList.remove('red')
@@ -45,11 +46,11 @@
                     }
                     let ka = setInterval(() => {
                         if (socket.readyState === WebSocket.OPEN) {
-                            socket.send('ping')
+                            socket.send(lastDate)
                         } else if (socket.readyState === WebSocket.CLOSED) {
                             clearInterval(ka)
                         }
-                    }, 1000*45);    // heroku needs a keep alive at least once in 55 seconds, we do 45 just to be safe
+                    }, 1000*25);    // heroku needs a keep alive at least once in 55 seconds, we do 25 just to be safe
                     console.log('ws connected, it should only log errors')
                 }
                 socket.onclose = (e) => {
@@ -62,11 +63,10 @@
                 }
                 socket.onmessage = (e) => {
                     let recv = e.data
-                    // ignore the keep alives
-                    if (recv !== "pong") {
-                        let event = JSON.parse(recv)
-                        addEvent(event)
-                    }
+                    // shouldn't neet keep alive ping/pong with worker model
+                    let event = JSON.parse(recv)
+                    lastDate = event.foundAt
+                    addEvent(event)
                 }
 
                 previewContainer.onmouseout = unsetPreview

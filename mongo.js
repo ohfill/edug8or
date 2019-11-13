@@ -42,6 +42,10 @@ EventSchema.statics.dump = function() {
     return this.find({}).sort({foundAt: 1})
 }
 
+EventSchema.statics.since = function(time) {
+    return this.find({foundAt: {$gt: time}}).sort({foundAt: 1})
+}
+
 module.exports = mongoose.model('Event', EventSchema)
 /* // leaving testing code for reference
 const ee = mongoose.model('Event', EventSchema)
