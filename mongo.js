@@ -19,12 +19,13 @@ const EventSchema = new mongoose.Schema({
     source: String,     // where did this come from? see ./sources/ folder
     foundAt: {          // record when we first ingest the event
         type: Date,
-        default: Date.now
+        default: Date.now,
+        index: true
     },
-    expireAt: {         // i think this will work...
-        type: Date,
+    expireAfterSeconds: {         // i think this will work...
+        type: Number,
         index: true,
-        default: () => { new Date(new Date().getTime() + 1000*60*24) }  // expire in 24 hours
+        default: 86400  // expire in 24 hours
     }
 })
 
