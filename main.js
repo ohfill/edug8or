@@ -12,6 +12,11 @@ app.get('/', (req, res) => {
     res.sendFile("./index.html", {root: __dirname})
 })
 
+// have this so we can wake up the dyno if needed
+app.get('/wake', (req, res) => {
+    res.json({wake: "true"})
+})
+
 app.ws('/events', (ws, req) => {
     (async () => {
         (await cache.dumpCache()).forEach(c => {

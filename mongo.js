@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const got = require('got')
-mongoose.connect(process.env.MONGODB_URI,
+mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017",
     {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true},
     (e) => {
         e ? console.log("error connecting to mongo") : console.log('connected to mongo')
