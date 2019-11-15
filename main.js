@@ -7,10 +7,7 @@ const express = require('express')
 const app = express()
 const expressWS = require('express-ws')(app)
 
-app.get('/', (req, res) => {
-    // just return the static page, can inline scripts and styles for now
-    res.sendFile("./index.html", {root: __dirname})
-})
+app.use(express.static("public"))
 
 // have this so we can wake up the dyno if needed
 app.get('/wake', (req, res) => {
