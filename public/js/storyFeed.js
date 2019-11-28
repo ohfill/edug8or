@@ -1,4 +1,7 @@
-function addStoryToFeed(datetime, storySource, url, headline) {
+const maxStories = 100
+var storyIds = []
+
+function addStoryToFeed(id, datetime, storySource, url, headline) {
     const feed = document.getElementById('feed');
     const storyTemplate = document.getElementById('story-template');
     const newStory = storyTemplate.cloneNode(true);
@@ -10,7 +13,8 @@ function addStoryToFeed(datetime, storySource, url, headline) {
     const hoveroverDIV = newStoryDiv.getElementsByClassName('hoverover')[0];
     const headlineLink = newStoryDiv.getElementsByClassName('headlineLink')[0];
 
-    newStoryDiv.id = '';
+    storyIds.push(id)
+    newStoryDiv.id = id;
     newStoryDiv.classList.add('story');
     newStoryDiv.classList.remove('story-template');
     newStoryDiv.classList.remove('hidden');
@@ -20,6 +24,16 @@ function addStoryToFeed(datetime, storySource, url, headline) {
     headlineLink.innerText = headline;
     headlineLink.href = url;
 
+    pruneStories()
+}
+
+// do i need to do locking here to protect storyIds?
+function pruneStories() {
+    while (storyIds.length > maxStories) {
+        let removeId = storyIds.shift()
+        let toRemove = document.getElementById(removeId)
+        toRemove.parentElement.removeChild(toRemove)
+    }
 }
 
 function updateConnectionIndicator(isConnected) {

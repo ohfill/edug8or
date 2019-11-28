@@ -20,13 +20,9 @@ const EventSchema = new mongoose.Schema({
     foundAt: {          // record when we first ingest the event
         type: Date,
         default: Date.now,
-        index: true
-    },
-    expireAfterSeconds: {         // i think this will work...
-        type: Number,
         index: true,
-        default: 86400  // expire in 24 hours
-    }
+        expires: 86400  // https://stackoverflow.com/questions/14597241/setting-expiry-time-for-a-collection-in-mongodb-using-mongoose
+    },
 })
 
 EventSchema.pre('save', async function(next) {
@@ -39,12 +35,23 @@ EventSchema.pre('save', async function(next) {
     }
 })
 
+const maxFetch = 100            // this needs to be adjusted per user feedback
+
 EventSchema.statics.dump = function() {
-    return this.find({}).sort({foundAt: 1})
+    return this.aggregate([
+        {$sort: {foundAt: -1}},
+        {$limit: maxFetch},
+        {$sort: {foundAt: 1}}
+    ])
 }
 
-EventSchema.statics.since = function(time) {
-    return this.find({foundAt: {$gt: time}}).sort({foundAt: 1})
+EventSchema.statics.since = function(msg) {
+    const time = new Date(msg)
+    return this.aggregate([
+        {$match: {foundAt: {$gt: time}}},
+        {$limit: maxFetch},
+        {$sort: {foundAt: 1}}
+    ])
 }
 
 module.exports = mongoose.model('Event', EventSchema)

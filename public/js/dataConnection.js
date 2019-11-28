@@ -69,10 +69,11 @@ async function tryWakeup() {
 }
 
 function processEvent(event) {
+    const id = event._id;
     const datetime = new Date(event.foundAt).toLocaleString();
     const storySource = event.source;
     const url = event.url;
     const headline = event.title;
 
-    addStoryToFeed(datetime, storySource, url, headline);
+    addStoryToFeed(id, datetime, storySource, url, headline);
 }
