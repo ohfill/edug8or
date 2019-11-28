@@ -48,17 +48,15 @@ async function restoreConnection() {
     while (connectionRetries < maxConnectionRetries) {
         ++connectionRetries;
         console.log(`retrying...${connectionRetries}/${maxConnectionRetries}`);
-        await tryWakeup().then((successful) => {
-            if (successful) {
-                return openConnection();
-            } else {
-                return new Promise(r=>setTimeout(r,1000));
-            }
-        });
+        if (await tryWakeup()) {
+            return openConnection();
+        } else {
+            await new Promise(r=>setTimeout(r,1000));
+        }
     }
 }
 
-function tryWakeup() {
+async function tryWakeup() {
     return new Promise((resolve) => {
         let xhr = new XMLHttpRequest();
         xhr.open("GET", "/wake");
